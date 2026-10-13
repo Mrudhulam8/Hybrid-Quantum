@@ -1,0 +1,261 @@
+{
+  "diagnostic_only": true,
+  "seeds": [
+    20261012,
+    20261013,
+    20261014,
+    20261015,
+    20261016,
+    20261017,
+    20261018,
+    20261019,
+    20261020,
+    20261021
+  ],
+  "candidates_per_method_per_seed": 500,
+  "total_candidate_assessments": 10000,
+  "uniform_mean_validity_rate": 0.0216,
+  "uniform_std_validity_rate": 0.007351492667781451,
+  "reference_guided_mean_validity_rate": 0.3006,
+  "reference_guided_std_validity_rate": 0.015464655041595842,
+  "paired_difference_mean_percentage_points": 27.900000000000002,
+  "paired_difference_std_percentage_points": 1.3960261060914625,
+  "seeds_guided_better": 10,
+  "seeds_tied": 0,
+  "seeds_guided_worse": 0,
+  "per_seed": [
+    {
+      "seed": 20261012,
+      "uniform": {
+        "candidates": 500,
+        "valid": 9,
+        "validity_rate": 0.018,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 488,
+          "ok": 9,
+          "mahalanobis_exceeded": 3
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 153,
+        "validity_rate": 0.306,
+        "rejection_reasons": {
+          "ok": 153,
+          "nn_distance_exceeded": 347
+        }
+      },
+      "difference_percentage_points": 28.799999999999997
+    },
+    {
+      "seed": 20261013,
+      "uniform": {
+        "candidates": 500,
+        "valid": 11,
+        "validity_rate": 0.022,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 488,
+          "ok": 11,
+          "mahalanobis_exceeded": 1
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 146,
+        "validity_rate": 0.292,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 354,
+          "ok": 146
+        }
+      },
+      "difference_percentage_points": 26.999999999999996
+    },
+    {
+      "seed": 20261014,
+      "uniform": {
+        "candidates": 500,
+        "valid": 11,
+        "validity_rate": 0.022,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 486,
+          "ok": 11,
+          "mahalanobis_exceeded": 3
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 142,
+        "validity_rate": 0.284,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 358,
+          "ok": 142
+        }
+      },
+      "difference_percentage_points": 26.199999999999996
+    },
+    {
+      "seed": 20261015,
+      "uniform": {
+        "candidates": 500,
+        "valid": 11,
+        "validity_rate": 0.022,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 487,
+          "ok": 11,
+          "mahalanobis_exceeded": 2
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 155,
+        "validity_rate": 0.31,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 345,
+          "ok": 155
+        }
+      },
+      "difference_percentage_points": 28.799999999999997
+    },
+    {
+      "seed": 20261016,
+      "uniform": {
+        "candidates": 500,
+        "valid": 15,
+        "validity_rate": 0.03,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 485,
+          "ok": 15
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 158,
+        "validity_rate": 0.316,
+        "rejection_reasons": {
+          "ok": 158,
+          "nn_distance_exceeded": 342
+        }
+      },
+      "difference_percentage_points": 28.6
+    },
+    {
+      "seed": 20261017,
+      "uniform": {
+        "candidates": 500,
+        "valid": 12,
+        "validity_rate": 0.024,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 487,
+          "ok": 12,
+          "mahalanobis_exceeded": 1
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 156,
+        "validity_rate": 0.312,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 344,
+          "ok": 156
+        }
+      },
+      "difference_percentage_points": 28.799999999999997
+    },
+    {
+      "seed": 20261018,
+      "uniform": {
+        "candidates": 500,
+        "valid": 16,
+        "validity_rate": 0.032,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 479,
+          "ok": 16,
+          "mahalanobis_exceeded": 5
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 162,
+        "validity_rate": 0.324,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 338,
+          "ok": 162
+        }
+      },
+      "difference_percentage_points": 29.200000000000003
+    },
+    {
+      "seed": 20261019,
+      "uniform": {
+        "candidates": 500,
+        "valid": 13,
+        "validity_rate": 0.026,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 483,
+          "ok": 13,
+          "mahalanobis_exceeded": 4
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 138,
+        "validity_rate": 0.276,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 362,
+          "ok": 138
+        }
+      },
+      "difference_percentage_points": 25.0
+    },
+    {
+      "seed": 20261020,
+      "uniform": {
+        "candidates": 500,
+        "valid": 5,
+        "validity_rate": 0.01,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 493,
+          "ok": 5,
+          "mahalanobis_exceeded": 2
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 149,
+        "validity_rate": 0.298,
+        "rejection_reasons": {
+          "ok": 149,
+          "nn_distance_exceeded": 351
+        }
+      },
+      "difference_percentage_points": 28.799999999999997
+    },
+    {
+      "seed": 20261021,
+      "uniform": {
+        "candidates": 500,
+        "valid": 5,
+        "validity_rate": 0.01,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 493,
+          "ok": 5,
+          "mahalanobis_exceeded": 2
+        }
+      },
+      "reference_guided": {
+        "candidates": 500,
+        "valid": 144,
+        "validity_rate": 0.288,
+        "rejection_reasons": {
+          "nn_distance_exceeded": 356,
+          "ok": 144
+        }
+      },
+      "difference_percentage_points": 27.799999999999997
+    }
+  ],
+  "target_model_queries": 0,
+  "thresholds_changed": false,
+  "campaign_results_modified": false,
+  "note": "Validity-only diagnostic; not evidence of improved failure discovery or quantum advantage."
+}

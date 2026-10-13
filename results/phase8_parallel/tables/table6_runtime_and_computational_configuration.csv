@@ -1,0 +1,5 @@
+method,mean_runtime_s,median_runtime_s,max_runtime_s,latent_dimension,details
+Random,25.87,11.62,86.52,,
+Bayesian opt.,9816.71,3345.13,48414.17,10.0,
+CMA-ES,31.82,13.81,169.51,69.0,
+Quantum-assisted,911.25,488.85,3004.48,4.0,"{""backend"": ""pennylane"", ""n_qubits"": 4, ""depth"": 2, ""shots"": 256, ""framework"": ""pennylane (default.qubit, analytic probabilities)"", ""framework_version"": ""0.45.1""}"

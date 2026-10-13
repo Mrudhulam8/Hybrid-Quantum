@@ -1,0 +1,418 @@
+{
+  "phase": 8,
+  "created_utc": "2026-10-13T07:44:53+00:00",
+  "project_version": "0.1.0",
+  "git_commit": null,
+  "note": "not a git repository",
+  "source_tree_sha256_16": "a63fffeb21f12597",
+  "dataset": {
+    "identifier": "cic-ids2017",
+    "provenance": {
+      "source": "cic-ids2017",
+      "role": "primary",
+      "is_synthetic": false,
+      "paper_eligible": true,
+      "files": {
+        "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv": {
+          "sha256": "6ff1580f5f81c0ae28a26f7631721018577f5f7c5e0feac28b795fcfe7b411ee",
+          "bytes": 77123859,
+          "rows": 225745
+        },
+        "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv": {
+          "sha256": "ca1824c51bfbb7b3c72290a11be04366ba8815878c6a1cc5c44cb1cee269e99b",
+          "bytes": 76906168,
+          "rows": 286467
+        },
+        "Friday-WorkingHours-Morning.pcap_ISCX.csv": {
+          "sha256": "53a41c24d570ea83b7ac55b2e94df94e7a8216aeb80a2af0246b6bc8bb543000",
+          "bytes": 58316725,
+          "rows": 191033
+        },
+        "Monday-WorkingHours.pcap_ISCX.csv": {
+          "sha256": "852c4beb34eda186f32561fa79df7a0747e92e1a6535b01270820dd9ffe17f34",
+          "bytes": 176927918,
+          "rows": 529918
+        },
+        "Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv": {
+          "sha256": "6bcda3857c2504676034e3ea57762d38393cc734cb377a726bd5cb153961b1b5",
+          "bytes": 83102436,
+          "rows": 288602
+        },
+        "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv": {
+          "sha256": "d67066211fb1689c78406f1506f4c44704ecb92088353d5c96d96d6474eb819d",
+          "bytes": 52023263,
+          "rows": 170366
+        },
+        "Tuesday-WorkingHours.pcap_ISCX.csv": {
+          "sha256": "52b8692ae8c7d2ed04671fe2b98335693c0a92c7ab157d8c8b534d6523080851",
+          "bytes": 135078995,
+          "rows": 445909
+        },
+        "Wednesday-workingHours.pcap_ISCX.csv": {
+          "sha256": "893c27dc968bf7a8adef1689f90be55ca4a4dc3088fb63d6ff247ac56856df2a",
+          "bytes": 225166395,
+          "rows": 692703
+        }
+      },
+      "n_rows_raw": 2830743,
+      "schema": "cic-ids2017",
+      "schema_missing": [],
+      "schema_extra": [],
+      "dropped_duplicate_columns": [
+        "Fwd Header Length.1"
+      ],
+      "schema_compatible": true,
+      "notes": "Day-wise CSVs concatenated; random (non-temporal) split is applied later.",
+      "requested_source": "cic-ids2017",
+      "load_errors_before_success": {}
+    },
+    "split_policy": {
+      "split_seed": 42,
+      "test_size": 0.3,
+      "max_rows": 200000,
+      "drop_duplicates": true,
+      "task": "binary",
+      "scaler": "standard",
+      "log_transform": true,
+      "note": "fixed across search seeds; oracle/validator/search space use the TRAINING split only"
+    }
+  },
+  "target_model_artifact": {
+    "path": "C:\\Users\\mrudhula\\Downloads\\Hybrid Quantum\\hqfd_phase8_fixed\\hybrid_quantum_failure_discovery\\models\\xgboost_cic-ids2017_binary.json",
+    "sha256": "a66ca7de31df986b1cce4bc6b13c8857c63c2475983bd7f6d2a3edadd928b635",
+    "meta_sha256": "fd60339ca7adca135cb162123b03dc54e6999e584a0693a7db670b2dc36bdc73",
+    "tag": "xgboost_cic-ids2017_binary",
+    "test_proba_sha256": "7cf6382981729f1d"
+  },
+  "methods": [
+    "random",
+    "bayesian",
+    "cmaes",
+    "quantum"
+  ],
+  "budgets": [
+    100,
+    250,
+    500,
+    1000,
+    2500,
+    5000
+  ],
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "budget_semantics": "independent_runs",
+  "n_runs_planned": 240,
+  "primary_metric": "unique_verified_failures",
+  "sensitivity_metric": "verified_failures",
+  "failure_definition": "verified_failure = candidate_valid AND oracle_confidence >= threshold AND target_prediction != oracle_label (unchanged)",
+  "configuration": {
+    "project": {
+      "name": "hybrid_quantum_failure_discovery",
+      "version": "0.1.0",
+      "results_dir": "results",
+      "models_dir": "models",
+      "data_dir": "data"
+    },
+    "reproducibility": {
+      "seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "quick_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "global_seed": 1
+    },
+    "data": {
+      "source": "cic-ids2017",
+      "fallback_order": [
+        "cic-ids2017",
+        "kdd99",
+        "synthetic-cic-schema"
+      ],
+      "raw_dir": "data/raw",
+      "cic_subdir": "cic-ids2017",
+      "processed_dir": "data/processed",
+      "task": "binary",
+      "max_rows": 200000,
+      "min_rows_per_class": 100,
+      "drop_duplicates": true,
+      "test_size": 0.3,
+      "split_seed": 42,
+      "scaler": "standard",
+      "log_transform": true,
+      "synthetic": {
+        "n_rows": 60000,
+        "data_seed": 0
+      }
+    },
+    "target_model": {
+      "type": "xgboost",
+      "seed": 42,
+      "val_fraction": 0.1,
+      "early_stopping_rounds": 20,
+      "params": {
+        "n_estimators": 500,
+        "max_depth": 6,
+        "learning_rate": 0.1,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "tree_method": "hist",
+        "n_jobs": -1,
+        "scale_pos_weight": null
+      }
+    },
+    "uncertainty": {
+      "measure": "entropy",
+      "n_probe_samples": 2000,
+      "top_quantile": 0.9
+    },
+    "validator": {
+      "numerical_tol": 1e-09,
+      "seed": 0,
+      "reference": {
+        "max_rows": null
+      },
+      "feature_range": {
+        "enabled": false,
+        "margin": 0.0
+      },
+      "mahalanobis": {
+        "threshold_mode": "empirical_quantile",
+        "quantile": 0.995,
+        "absolute_threshold": null,
+        "shrinkage": "ledoit_wolf",
+        "shrinkage_alpha": 0.1,
+        "ridge": 0.0,
+        "eigenvalue_floor_rel": 1e-08
+      },
+      "nn_gate": {
+        "enabled": true,
+        "mode": "empirical_quantile",
+        "quantile": 0.995,
+        "absolute_threshold": null
+      },
+      "calibration": {
+        "sample_size": 5000
+      },
+      "knn": {
+        "k": 15,
+        "min_purity": 0.8,
+        "chunk_size": 64
+      },
+      "failure_rule": {
+        "min_oracle_confidence": 0.8,
+        "min_target_confidence": 0.0
+      },
+      "dedup_resolution": 0.05,
+      "use_autoencoder": false
+    },
+    "search": {
+      "n_iterations": 10,
+      "active_dims": 10,
+      "warmup_fraction": 0.1,
+      "common": {
+        "query_budgets": [
+          100,
+          250,
+          500,
+          1000,
+          2500,
+          5000
+        ],
+        "seeds": null,
+        "duplicate_policy": "skip",
+        "max_candidates_per_query": 50,
+        "store_trajectory": true,
+        "low_validity_warning_rate": 0.01,
+        "objective": {
+          "w_uncertainty": 0.5,
+          "w_failure_likelihood": 0.5,
+          "w_novelty": 0.0,
+          "novelty_length": 0.1,
+          "invalid_base": 0.1,
+          "invalid_slope": 0.1,
+          "invalid_excess_cap": 10.0
+        }
+      },
+      "random": {
+        "generator": "local_perturbation",
+        "batch_size": 64
+      },
+      "bayesian": {
+        "representation": "pca",
+        "n_components": 10,
+        "latent_bound": 2.0,
+        "init_fraction": 0.1,
+        "min_initial": 5,
+        "n_initial": null,
+        "kernel": "matern52",
+        "ard": true,
+        "acquisition": "ei",
+        "xi": 0.01,
+        "ucb_beta": 2.0,
+        "n_random_proposals": 512,
+        "n_local_proposals": 256,
+        "local_top_k": 5,
+        "local_sigma": 0.05,
+        "batch_size": 1,
+        "min_separation": 0.01,
+        "max_train_points": 500,
+        "n_restarts_optimizer": 0,
+        "refit_hyperparams_every": 10,
+        "noise_floor": 1e-06,
+        "include_invalid_observations": true
+      },
+      "cmaes": {
+        "representation": "full",
+        "n_components": 10,
+        "latent_bound": 2.0,
+        "sigma0": 0.1,
+        "popsize": null,
+        "max_generations": null,
+        "x0": "reference_anchor",
+        "restart_on_convergence": true,
+        "sigma_min": 0.0001,
+        "max_condition": 1000000000000.0,
+        "flat_generations": 3
+      },
+      "quantum": {
+        "backend": "auto",
+        "n_qubits": 4,
+        "depth": 2,
+        "shots": 256,
+        "latent_dimension": 4,
+        "latent_bound": 2.0,
+        "initialization": "uniform",
+        "seed": 0,
+        "iterations": null,
+        "entanglement": "ring",
+        "init_fraction": 0.1,
+        "min_initial": 5,
+        "n_initial": null,
+        "batch_size": 8,
+        "opt_steps": 10,
+        "learning_rate": 0.2,
+        "region_top_k": 3,
+        "radius_init": 0.5,
+        "radius_min": 0.05,
+        "radius_max": 1.0,
+        "radius_expand": 1.3,
+        "radius_shrink": 0.7,
+        "kernel_length": 0.5,
+        "exploration_weight": 0.2,
+        "max_surrogate_points": 500
+      }
+    },
+    "search_space": {
+      "seed": 0,
+      "numerical_tol": 1e-09,
+      "bounds": {
+        "mode": "reference_quantile",
+        "lower_quantile": 0.001,
+        "upper_quantile": 0.999,
+        "margin": 0.0,
+        "absolute_lower": null,
+        "absolute_upper": null
+      },
+      "constraints": {
+        "radius": {
+          "enabled": false,
+          "max_radius": 3.0
+        },
+        "mahalanobis": {
+          "enabled": false,
+          "quantile": 0.99,
+          "shrinkage": "ledoit_wolf",
+          "shrinkage_alpha": 0.1,
+          "ridge": 0.0,
+          "eigenvalue_floor_rel": 1e-08
+        }
+      },
+      "generators": {
+        "default": "local_perturbation",
+        "local_perturbation": {
+          "scale": 0.1,
+          "distribution": "gaussian",
+          "truncation": 3.0
+        }
+      }
+    },
+    "gp_bo": {
+      "kernel": "matern52",
+      "acquisition": "ei",
+      "max_train_points": 500,
+      "batch_size": 10
+    },
+    "cmaes": {
+      "sigma0": 0.3,
+      "popsize": null
+    },
+    "quantum": {
+      "backend": "default.qubit",
+      "n_qubits": 8,
+      "n_layers": 3,
+      "ansatz": "hardware_efficient",
+      "optimizer": "adam",
+      "lr": 0.05,
+      "n_steps_per_iteration": 30,
+      "shots": null,
+      "n_samples_per_iteration": 50
+    },
+    "ablations": {
+      "no_uncertainty_init": false,
+      "no_feedback": false,
+      "no_distribution_validation": false,
+      "classical_uncertainty_guided": false
+    }
+  },
+  "config_hash": "b2a50186eabb",
+  "campaign_fingerprint": "bab7dcaeda7b",
+  "software": {
+    "python": "3.11.4",
+    "platform": "Windows-10-10.0.26300-SP0",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "sklearn": "1.9.1",
+    "pandas": "3.0.6",
+    "xgboost": "3.2.0",
+    "pennylane": "0.45.1",
+    "matplotlib": "3.11.2",
+    "cma": "4.5.0"
+  },
+  "quantum": {
+    "backend_requested": "auto",
+    "backend_resolved_in_runs": "pennylane",
+    "framework": "pennylane (default.qubit, analytic probabilities)",
+    "framework_version": "0.45.1",
+    "n_qubits": 4,
+    "depth": 2,
+    "shots": 256,
+    "latent_dimension": 4,
+    "characterisation": "hybrid quantum-assisted search on a classical simulator; no quantum hardware; no claim of quantum advantage"
+  },
+  "paper_eligible": true,
+  "warnings": []
+}

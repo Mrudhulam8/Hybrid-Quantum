@@ -1,0 +1,245 @@
+# Default experiment configuration. Every run saves a resolved copy of this
+# file next to its results (see src/utils.py::save_run_config).
+project:
+  name: hybrid_quantum_failure_discovery
+  version: "0.1.0"
+  results_dir: results
+  models_dir: models
+  data_dir: data
+
+reproducibility:
+  seeds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]   # FINAL experiments use all 10 seeds
+  quick_seeds: [1, 2, 3, 4, 5]             # for debugging / smoke runs only
+  global_seed: 1
+
+
+data:
+  # auto = try CIC-IDS2017 -> KDD99 (public, real) -> synthetic-cic-schema (offline, tests only)
+  source: auto                   # auto | cic-ids2017 | kdd99 | synthetic-cic-schema
+  fallback_order: [cic-ids2017, kdd99, synthetic-cic-schema]
+  raw_dir: data/raw
+  cic_subdir: cic-ids2017        # put the MachineLearningCSV *.csv files in data/raw/cic-ids2017/
+  processed_dir: data/processed
+  task: binary                   # binary (BENIGN vs ATTACK) | multiclass
+  max_rows: 200000               # stratified cap for prototyping (null = all rows)
+  min_rows_per_class: 100        # rare classes are kept (up to this many) when subsampling
+  drop_duplicates: true          # CIC-IDS2017 contains many exact duplicate flows
+  test_size: 0.3
+  split_seed: 42                 # data split is FIXED across search seeds, so seed variance = search variance
+  scaler: standard               # standard | minmax | none
+  log_transform: true            # signed log1p before scaling (heavy-tailed flow features); invertible
+  synthetic:
+    n_rows: 60000
+    data_seed: 0
+
+
+target_model:
+  type: xgboost                  # xgboost is the ONLY research model; 'dev-mock' is tests-only (env-guarded)
+  seed: 42                       # training seed (distinct from search seeds)
+  val_fraction: 0.1              # carved from TRAIN (never from test) for early stopping
+  early_stopping_rounds: 20
+  params:
+    n_estimators: 500            # upper bound; early stopping picks the actual number
+    max_depth: 6
+    learning_rate: 0.1
+    subsample: 0.8
+    colsample_bytree: 0.8
+    tree_method: hist
+    n_jobs: -1                   # NOTE: XGBoost is reproducible for a fixed thread count/hardware
+    scale_pos_weight: null       # null = no class re-weighting (binary only)
+
+
+uncertainty:
+  measure: entropy               # entropy | margin
+  n_probe_samples: 2000
+  top_quantile: 0.9              # fraction of most-uncertain probes that define a region
+
+validator:
+  # ---- Phase 4: failure validation (ALL thresholds live here; none are hard-coded) ----------
+  # Reference/oracle data = the TRAINING split only (see docs/data_split_policy.md). The held-out
+  # test split is never read by the oracle or the validator.
+  numerical_tol: 1.0e-9
+  seed: 0                          # calibration sub-sampling seed (fixed; independent of search seeds)
+  reference:
+    max_rows: null                 # null = all training rows (deterministic stratified cap otherwise)
+  feature_range:                   # per-feature [min,max] of the reference (scaled space)
+    enabled: false                 # OFF by default: ~60% of flow features have a clipped floor (mass exactly at
+                                   # the minimum), so a zero-margin range gate rejects virtually every perturbed
+                                   # point; Mahalanobis + NN gates already cover realism. Re-check on real CIC with
+                                   # `python main.py validator-diagnostics`. Opt in with enabled: true + margin.
+    margin: 0.0                    # fraction of the range allowed beyond [min,max]
+  mahalanobis:                     # global Mahalanobis distance to the reference distribution
+    threshold_mode: empirical_quantile   # empirical_quantile | chi2_quantile | absolute
+    quantile: 0.995                # used by empirical_quantile (of the reference's own distances) and chi2_quantile
+    absolute_threshold: null       # used by mode=absolute
+    shrinkage: ledoit_wolf         # ledoit_wolf | fixed | none
+    shrinkage_alpha: 0.1           # used by shrinkage=fixed: S' = (1-a)S + a*tr(S)/d*I
+    ridge: 0.0                     # extra diagonal term added after shrinkage
+    eigenvalue_floor_rel: 1.0e-8   # eigenvalues below floor*max are raised to the floor
+  nn_gate:                         # candidate must lie near real reference points
+    enabled: true
+    mode: empirical_quantile       # empirical_quantile | absolute
+    quantile: 0.995                # quantile of leave-one-out 1-NN distances of reference points
+    absolute_threshold: null
+  calibration:
+    sample_size: 5000              # reference points used to calibrate the NN-distance gate
+  knn:                             # reference label oracle (Euclidean, scaled space)
+    k: 15
+    min_purity: 0.8                # below this the oracle ABSTAINS (no label)
+    chunk_size: 64
+  failure_rule:                    # verified_failure = valid AND oracle_conf>=min AND pred != oracle_label
+    min_oracle_confidence: 0.8
+    min_target_confidence: 0.0     # 0 = off. Can only RESTRICT failures; uncertainty is never a failure criterion.
+  dedup_resolution: 0.05           # (used later by the failure tracker) scaled units
+  use_autoencoder: false           # optional, NOT implemented
+
+search:
+  # ---- Phase 6: classical search baselines (random / bayesian / cmaes) -----------------------------------
+  # All methods share SearchSpace, FailureValidator, ReferenceOracle, target model, query-budget wrapper,
+  # duplicate policy, failure definition and seed policy. Values are a-priori placeholders fixed BEFORE any
+  # experiment; they must not be tuned on failure outcomes.
+  n_iterations: 10               # LEGACY Phase 1 placeholder, unused by Phase 6
+  active_dims: 10                # LEGACY Phase 1 placeholder, unused (Bayesian uses search.bayesian.n_components)
+  warmup_fraction: 0.1           # LEGACY Phase 1 placeholder, unused (Bayesian uses search.bayesian.init_fraction)
+  common:
+    query_budgets: [100, 250, 500, 1000, 2500, 5000]   # supported budgets; any positive integer works
+    seeds: null                  # null = reproducibility.seeds
+    duplicate_policy: skip       # skip = never re-query an already evaluated candidate id | allow = re-evaluate
+    max_candidates_per_query: 50 # shared proposal cap = ceil(factor * budget): invalid proposals are free, so
+                                 # something must bound them, identically for every method
+    store_trajectory: true       # keep the per-candidate record list in each SearchResult
+    low_validity_warning_rate: 0.01   # warn when fewer than this fraction of evaluated candidates is valid
+    objective:                   # common SEARCH SCORE (ranking only; never a failure verdict)
+      w_uncertainty: 0.5         # normalised target entropy
+      w_failure_likelihood: 0.5  # 1 - p_target(oracle_label) when the oracle is confident
+      w_novelty: 0.0             # distance to earlier queried candidates of the same run (off by default)
+      novelty_length: 0.1
+      invalid_base: 0.1          # invalid candidates score -(base + slope * min(excess, cap)), excess = gate overshoot
+      invalid_slope: 0.1
+      invalid_excess_cap: 10.0
+  random:
+    generator: local_perturbation  # uniform_random | local_perturbation; Phase 8 uses reference-anchored proposals
+    batch_size: 64
+  bayesian:
+    representation: pca          # pca | full  (a GP on ~77 raw dimensions is unreliable; see docs/search_algorithms.md)
+    n_components: 10             # PCA axes of the TRAINING reference features (label-free, deterministic)
+    latent_bound: 2.0            # PCA box half-width, in std units of each axis
+    init_fraction: 0.1           # initial design size as a fraction of the budget (counted, never free)
+    min_initial: 5
+    n_initial: null              # overrides init_fraction when set
+    kernel: matern52             # matern52 | rbf
+    ard: true
+    acquisition: ei              # ei | ucb
+    xi: 0.01
+    ucb_beta: 2.0
+    n_random_proposals: 512
+    n_local_proposals: 256
+    local_top_k: 5
+    local_sigma: 0.05            # normalised [0,1] coordinates
+    batch_size: 1                # >1 = greedy top-q with min_separation
+    min_separation: 0.01
+    max_train_points: 500        # top scorers + most recent; keeps the GP fit O(n^3) tractable
+    n_restarts_optimizer: 0
+    refit_hyperparams_every: 10  # posterior-only refit in between
+    noise_floor: 1.0e-6
+    include_invalid_observations: true   # invalid candidates are free, label-free information
+  cmaes:
+    representation: full         # full (standardised features) | pca
+    n_components: 10
+    latent_bound: 2.0
+    sigma0: 0.1                  # in std units of the reference features (Phase 5 local_perturbation default)
+    popsize: null                # null = 4 + floor(3 ln n)
+    max_generations: null        # null = until the budget / proposal cap is exhausted
+    x0: reference_anchor         # reference_anchor | reference_mean | random_uniform (feature rows only; no labels)
+    restart_on_convergence: true
+    sigma_min: 1.0e-4
+    max_condition: 1.0e+12
+    flat_generations: 3
+  quantum:                       # Phase 7: hybrid classical-quantum search (SIMULATOR ONLY; no hardware)
+    # Same SearchSpace / FailureValidator / query budget / duplicate policy / proposal cap / seeds as the classical methods.
+    # Circuit executions cost ZERO target-model queries and are tallied separately in the result.
+    # Values are a-priori placeholders fixed BEFORE any experiment; do not tune them on failure outcomes.
+    backend: auto                # auto (pennylane if importable and self-check passes, else numpy_statevector) | pennylane | numpy_statevector
+    n_qubits: 4
+    depth: 2
+    shots: 256                   # measurement shots per iteration (ideal multinomial sampling of exact probabilities)
+    latent_dimension: 4          # PCA axes of the TRAINING reference features; must be <= n_qubits
+    latent_bound: 2.0
+    initialization: reference_guided  # uniform | reference_guided; reference_guided uses training features only
+    seed: 0                      # salt combined with the run seed to derive the circuit seed
+    iterations: null             # null = until the budget / proposal cap is exhausted
+    entanglement: ring           # ring | linear
+    init_fraction: 0.1           # initial design as a fraction of the budget (counted, never free)
+    min_initial: 5
+    n_initial: null
+    batch_size: 8                # candidates proposed per quantum iteration
+    opt_steps: 10                # Adam steps on the circuit parameters per iteration (parameter-shift gradients)
+    learning_rate: 0.2
+    region_top_k: 3              # region centres rotate over the k best observed points
+    radius_init: 0.5             # region half-width as a fraction of latent_bound
+    radius_min: 0.05
+    radius_max: 1.0
+    radius_expand: 1.3           # when the best observed search score improved
+    radius_shrink: 0.7           # otherwise
+    kernel_length: 0.5           # surrogate Gaussian-kernel length (latent units)
+    exploration_weight: 0.2      # novelty bonus weight in the cell score
+    max_surrogate_points: 500
+
+search_space:
+  # ---- Phase 5: candidate generation (QUERY-FREE; never sees labels or the target model) ----------
+  # All statistics come from the TRAINING split's feature matrix only. Values below are
+  # placeholders chosen BEFORE any experiment; they must be fixed using reference-only diagnostics
+  # (bounds/validity), never using failure outcomes.
+  seed: 0                          # default generator seed (experiment seeds come from reproducibility.seeds)
+  numerical_tol: 1.0e-9
+  bounds:
+    mode: reference_quantile       # reference_minmax | reference_quantile | absolute
+    lower_quantile: 0.001          # used by reference_quantile
+    upper_quantile: 0.999
+    margin: 0.0                    # widen [lo,hi] by this fraction of the range (>= 0)
+    absolute_lower: null           # used by mode=absolute (scaled units, same for every feature)
+    absolute_upper: null
+  constraints:                     # optional, star-shaped around the reference mean, applied by projection
+    radius:                        # RMS z-score ball: sqrt(mean_j ((x_j-mean_j)/std_j)^2) <= max_radius
+      enabled: false
+      max_radius: 3.0
+    mahalanobis:                   # reuses src/oracle.py::MahalanobisValidity (Phase 4), statistics only
+      enabled: false
+      quantile: 0.99               # threshold = this quantile of the reference's own distances
+      shrinkage: ledoit_wolf       # ledoit_wolf | fixed | none
+      shrinkage_alpha: 0.1
+      ridge: 0.0
+      eigenvalue_floor_rel: 1.0e-8
+  generators:
+    default: local_perturbation    # uniform_random | local_perturbation; reference-anchored for Phase 8
+    local_perturbation:
+      scale: 0.1                   # perturbation size as a fraction of each feature's reference std
+      distribution: gaussian       # gaussian | uniform
+      truncation: 3.0              # gaussian draws are clipped to +-truncation (in units of scale*std)
+
+gp_bo:                           # LEGACY Phase 1 placeholder (unused); Phase 6 uses search.bayesian
+  kernel: matern52
+  acquisition: ei
+  max_train_points: 500          # cap to keep GP fitting O(n^3) tractable
+  batch_size: 10
+
+cmaes:                           # LEGACY Phase 1 placeholder (unused); Phase 6 uses search.cmaes
+  sigma0: 0.3
+  popsize: null                  # null = CMA default
+
+quantum:                         # LEGACY Phase 1 placeholder (unused); Phase 7 uses search.quantum
+  backend: default.qubit         # default.qubit | lightning.qubit | ibm (optional)
+  n_qubits: 8
+  n_layers: 3
+  ansatz: hardware_efficient     # hardware_efficient | qaoa_inspired
+  optimizer: adam
+  lr: 0.05
+  n_steps_per_iteration: 30
+  shots: null                    # null = exact statevector expectation
+  n_samples_per_iteration: 50
+
+ablations:
+  no_uncertainty_init: false
+  no_feedback: false
+  no_distribution_validation: false
+  classical_uncertainty_guided: false

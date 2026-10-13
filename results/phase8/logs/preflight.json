@@ -1,0 +1,205 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "dependencies",
+      "ok": true,
+      "status": "PASS",
+      "detail": {
+        "python": "3.11.4",
+        "platform": "Windows-10-10.0.26200-SP0",
+        "numpy": "2.4.6",
+        "scipy": "1.17.1",
+        "sklearn": "1.9.1",
+        "pandas": "3.0.6",
+        "xgboost": "3.2.0",
+        "pennylane": "0.45.1",
+        "matplotlib": "3.11.2",
+        "cma": "4.5.0"
+      }
+    },
+    {
+      "check": "configured_budgets_seeds_matrix",
+      "ok": true,
+      "status": "PASS",
+      "detail": {
+        "budgets": [
+          100,
+          250,
+          500,
+          1000,
+          2500,
+          5000
+        ],
+        "seeds": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "n_runs": 240
+      }
+    },
+    {
+      "check": "four_search_methods_registered",
+      "ok": true,
+      "status": "PASS",
+      "detail": [
+        "random",
+        "bayesian",
+        "cmaes",
+        "quantum"
+      ]
+    },
+    {
+      "check": "static_no_label_or_model_internal_access",
+      "ok": true,
+      "status": "PASS",
+      "detail": "no label/test/model-internal tokens in search modules"
+    },
+    {
+      "check": "result_directory",
+      "ok": true,
+      "status": "PASS",
+      "detail": "C:\\Users\\mrudhula\\Downloads\\Hybrid Quantum\\hqfd_phase8_fixed\\hybrid_quantum_failure_discovery\\results\\phase8"
+    },
+    {
+      "check": "real_cic_ids2017_and_target_artifact",
+      "ok": true,
+      "status": "PASS",
+      "detail": {
+        "dataset": "cic-ids2017",
+        "paper_eligible": true,
+        "n_train": 139995,
+        "n_features": 69,
+        "model_kind": "xgboost",
+        "model_sha256": "a66ca7de31df986b1cce4bc6b13c8857c63c2475983bd7f6d2a3edadd928b635",
+        "reference_fingerprint": "91d887f2658c21e2"
+      }
+    },
+    {
+      "check": "target_model_artifact_matches_phase3_report_and_paper_eligible",
+      "ok": true,
+      "status": "PASS",
+      "detail": {
+        "test_proba_sha256": "7cf6382981729f1d",
+        "paper_eligible": true,
+        "historical_metrics": {
+          "accuracy": 0.9987999599986667,
+          "precision": 0.9953760498254223,
+          "recall": 0.9978242361176805,
+          "f1": 0.9965986394557823,
+          "roc_auc": 0.999960118112016
+        }
+      }
+    },
+    {
+      "check": "validator_and_oracle",
+      "ok": true,
+      "status": "PASS",
+      "detail": {
+        "oracle": "ReferenceOracle",
+        "validator": "FailureValidator",
+        "min_oracle_confidence": 0.8
+      }
+    },
+    {
+      "check": "query_budget_wrapper_accounting_and_dynamic_no_label_access_all_methods",
+      "ok": true,
+      "status": "PASS",
+      "detail": {
+        "random": {
+          "queries_used": 50,
+          "backend_rows": 50,
+          "backend_calls": 3,
+          "wrapper_calls": 3,
+          "ok": true,
+          "unique_verified_failures": 2,
+          "verified_failures": 2
+        },
+        "bayesian": {
+          "queries_used": 50,
+          "backend_rows": 50,
+          "backend_calls": 50,
+          "wrapper_calls": 50,
+          "ok": true,
+          "unique_verified_failures": 0,
+          "verified_failures": 0
+        },
+        "cmaes": {
+          "queries_used": 50,
+          "backend_rows": 50,
+          "backend_calls": 5,
+          "wrapper_calls": 5,
+          "ok": true,
+          "unique_verified_failures": 0,
+          "verified_failures": 0
+        },
+        "quantum": {
+          "queries_used": 50,
+          "backend_rows": 50,
+          "backend_calls": 11,
+          "wrapper_calls": 11,
+          "ok": true,
+          "unique_verified_failures": 0,
+          "verified_failures": 0
+        }
+      }
+    },
+    {
+      "check": "quantum_backend",
+      "ok": true,
+      "status": "PASS",
+      "detail": {
+        "n_qubits": 4,
+        "depth": 2,
+        "n_params": 20,
+        "shots": 256,
+        "entanglement": "ring",
+        "n_entangling_gates_per_layer": 4,
+        "backend": "pennylane",
+        "framework": "pennylane (default.qubit, analytic probabilities)",
+        "framework_version": "0.45.1"
+      }
+    },
+    {
+      "check": "reproducibility_quantum_and_classical",
+      "ok": true,
+      "status": "PASS",
+      "detail": [
+        {
+          "method": "quantum",
+          "budget": 50,
+          "seed": 1,
+          "identical": true,
+          "details": {
+            "candidate_sequence": true,
+            "queries_used": true,
+            "verified_failure_ids": true,
+            "scores": true,
+            "summary": true
+          }
+        },
+        {
+          "method": "cmaes",
+          "budget": 50,
+          "seed": 1,
+          "identical": true,
+          "details": {
+            "candidate_sequence": true,
+            "queries_used": true,
+            "verified_failure_ids": true,
+            "scores": true,
+            "summary": true
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+# Local environments and editor state
+.venv/
+venv/
+.vscode/
+
+# Python and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+*.bak
+
+# Local datasets and generated model artifacts
+/data/raw/*
+/data/processed/*
+/models/*.json
+/models/*.joblib
+/results/raw/*
+!**/.gitkeep
+
+# Downloaded archives and alternate project copies in the workspace
+*.zip
+/hqfd_phase3/
+/hqfd_phase3_BACKUP/
+/hqfd_phase8/
+/hqfd_phase8_fixed/

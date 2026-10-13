@@ -1,0 +1,29 @@
+# Core scientific stack
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+scikit-learn>=1.3
+xgboost>=2.0
+pyyaml>=6.0
+joblib>=1.3
+
+# Classical baselines
+cma>=3.3            # NOT used by Phase 6: src/cmaes_search.py is a self-contained CMA-ES. GP-BO uses scikit-learn's GaussianProcessRegressor.
+
+# Quantum component (simulator only; no cloud account needed)
+pennylane>=0.35     # Phase 7 uses it when importable (backend: auto|pennylane); otherwise a built-in NumPy state-vector simulator is used
+# pennylane-lightning>=0.35   # optional: faster simulator (pip install pennylane-lightning)
+
+# Deep learning (autoencoder validator, optional VQC training utilities)
+torch>=2.0
+
+# Visualisation
+matplotlib>=3.7
+seaborn>=0.12
+
+# Testing
+pytest>=7.0
+
+# ---- Optional, NOT required ----
+# qiskit>=1.0
+# qiskit-ibm-runtime>=0.20   # only for the optional real-hardware interface

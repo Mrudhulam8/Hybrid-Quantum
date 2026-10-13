@@ -1,0 +1,17 @@
+{
+  "diagnostic_only": true,
+  "method": "quantum_initial_design",
+  "seed": 20261012,
+  "candidates_generated": 500,
+  "valid_candidates": 9,
+  "invalid_candidates": 491,
+  "validity_rate": 0.018,
+  "rejection_reasons": {
+    "nn_distance_exceeded": 488,
+    "ok": 9,
+    "mahalanobis_exceeded": 3
+  },
+  "target_model_queries": 0,
+  "thresholds_changed": false,
+  "campaign_results_modified": false
+}

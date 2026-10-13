@@ -1,0 +1,32 @@
+{
+  "diagnostic_only": true,
+  "seed": 20261012,
+  "candidate_count_per_method": 500,
+  "baseline_uniform_latent": {
+    "candidates": 500,
+    "valid": 9,
+    "invalid": 491,
+    "validity_rate": 0.018,
+    "schema_rejections": {},
+    "oracle_reasons": {
+      "nn_distance_exceeded": 488,
+      "ok": 9,
+      "mahalanobis_exceeded": 3
+    }
+  },
+  "experimental_reference_guided": {
+    "candidates": 500,
+    "valid": 153,
+    "invalid": 347,
+    "validity_rate": 0.306,
+    "schema_rejections": {},
+    "oracle_reasons": {
+      "ok": 153,
+      "nn_distance_exceeded": 347
+    }
+  },
+  "target_model_queries": 0,
+  "thresholds_changed": false,
+  "campaign_results_modified": false,
+  "note": "Validity diagnostic only. Reference-guided proposals use training reference rows; the proposal distributions differ by design and this does not establish quantum advantage."
+}
